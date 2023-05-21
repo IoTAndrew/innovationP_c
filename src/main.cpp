@@ -25,7 +25,7 @@ void loop() {
   // put your main code here, to run repeatedly: //probably switching to gpio
 
   
-    char fromPi[] = {(char)mySerial.read()}; //probably wrong format
+    String fromPi = (String)mySerial.readString(); //probably wrong format
     mySerial.print("I got:");
     mySerial.println(fromPi); //try displaying char array
 
