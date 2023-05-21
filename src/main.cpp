@@ -1,19 +1,37 @@
 #include <Controllino.h>
+#include <SoftwareSerial.h>
+
+String sensorstring;
+
+#define mySerial Serial1
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  mySerial.begin(9600);
+  sensorstring.reserve(50);
+  
   while (!Serial) {
-    ; // Wait for serial port to connect
+    ;
+  }
+
+  while (!mySerial) {
+    ;
   }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  if (Serial.available()) {
-    String fromPi = Serial.readString();
-    Serial.print("I got:");
-    Serial.println(fromPi);
+  if (mySerial.available() > 0){
+  // put your main code here, to run repeatedly: //probably switching to gpio
+
+  
+    char fromPi[] = {(char)mySerial.read()}; //probably wrong format
+    mySerial.print("I got:");
+    mySerial.println(fromPi); //try displaying char array
+
+    sensorstring += fromPi;
+    
+    
     
     // Simulating sensor data for testing
     String temp1 = "5.4";
@@ -27,6 +45,8 @@ void loop() {
     
     // Send sensor data back to the web app
     String response = temp1 + "&" + temp2 + "&" + ph + "&" + hum + "&" + ec + "&" + tds + "&" + orp + "&" + co2;
-    Serial.println(response);
+    //mySerial.println(response);
+    delay(1000);
   }
+  mySerial.print(sensorstring);
 }
