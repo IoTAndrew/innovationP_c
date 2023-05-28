@@ -16,7 +16,7 @@ long duration;
 int distance;
 int av_dist;
 int water_level;
-void waterLevel();
+int waterLevel();
 
 void setup() {
 
@@ -39,32 +39,38 @@ void setup() {
 
 void loop() {
   if (mySerial.available() > 0){
-    String temp1 = "5.4";
-    String temp2 = "3.3";
-    String ph = "5.5";
-    String hum = "50%";
-    String ec = "200";
-    String tds = "300";
-    String orp = "-200";
-    String co2 = "500";
+    String wlvl = String(waterLevel());
+    String ph = "2";
+    String h2O2 = "3";
+    String co = "4";
+    String wtemp1 = "5";
+    String ec = "6";
+    String atemp1 = "7";
+    String rh1 = "8";
+    String wtemp2 = "9";
+    String orp = "10";
+    String atemp2 = "-11";
+    String rh2 = "12";
+
     if (fromPi != ""){
       fromPi = mySerial.readString();
-      mySerial.print("I got:");
-      mySerial.println(fromPi);
+      //mySerial.print("I got:");
+      //mySerial.println(fromPi);
     }
     else{
       ;
     }
     //sensorstring += fromPi;
     // Send sensor data back to the web app
-    String response = temp1 + "&" + temp2 + "&" + ph + "&" + hum + "&" + ec + "&" + tds + "&" + orp + "&" + co2;
-    //mySerial.println(response);
-    waterLevel(); 
+    String response = wlvl + "&" + ph + "&" + h2O2 + "&" + co + "&" + wtemp1 + "&" + ec + "&" + atemp1 + "&" + 
+    rh1 + "&" + wtemp2 + "&" + orp + "&" + atemp2 + "&" + rh2;
+    mySerial.println(response);
+    //waterLevel(); 
   }
   //mySerial.print(sensorstring);
 }
 
-void waterLevel(void){
+int waterLevel(){
     // 200 ms
     float water_level_sum = 0; // sum declaration
     for (int i=0 ; i<5 ; i++){ // 5 samples are taken
@@ -82,9 +88,9 @@ void waterLevel(void){
     water_level_sum = water_level_sum + distance;
     }
     av_dist = round(water_level_sum / 5.0); // one average value of distance in cm
-    water_level = map(av_dist, 2, 22, 100, 0); // one average value of distance in % | sensor's range starts from 2 cm (fixed)
+    water_level = map(av_dist, 2, 230, 100, 0); // one average value of distance in % | sensor"s range starts from 2 cm (fixed)
     //mySerial.print("  Distance in cm: "); // prints average of 5 samples in cm
-    mySerial.println(av_dist);
+    //mySerial.println(av_dist);
     //mySerial.print("\t Distance in %: "); // prints average of 5 samples in %
-    //mySerial.println(water_level); 
+    return water_level; 
 }
